@@ -8,11 +8,11 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 
   // Menu item for pronunciation
-  chrome.contextMenus.create({
-    id: 'yahooPronounce',
-    title: 'Pronounce "%s"',
-    contexts: ['selection']
-  });
+  // chrome.contextMenus.create({
+  //   id: 'yahooPronounce',
+  //   title: 'Pronounce "%s"',
+  //   contexts: ['selection']
+  // });
 });
 
 // Handle context menu clicks
@@ -21,7 +21,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
   if (info.menuItemId === 'yahooLookup') {
     // Open Yahoo Dictionary with the selected word
-    const yahooUrl = `https://hk.dictionary.search.yahoo.com/search;_ylt=Awrx_LmoNdFpJgIAkuLFoolQ;_ylc=X1MDMTM1MTE5NzM4MQRfcgMyBGZyA3NmcARmcjIDc2ItdG9wBGdwcmlkA29hcFUzbFNLUVVtYktBeURVMGYxRkEEbl9yc2x0AzAEbl9zdWdnAzEwBG9yaWdpbgNoay5kaWN0aW9uYXJ5LnNlYXJjaC55YWhvby5jb20EcG9zAzAEcHFzdHIDBHBxc3RybAMwBHFzdHJsAzQEcXVlcnkDd29yZAR0X3N0bXADMTc3NTMxODQ0NQ--?p=${selectedText}`;
+    const yahooUrl = `https://hk.dictionary.search.yahoo.com/search;_ylt=Awr1TUaTuxJqVwIA4qvDoolQ;_ylc=X1MDMTM1MTE5NzM3OQRfcgMyBGFjdG4Da2V5Ym9hcmQEZnIyA3A6cyx2OnNmcCxtOnNiLXRvcARncHJpZANoNHduN0R4eFQ2ZUhaQk9zNVdHR1RBBG5fcnNsdAMwBG5fc3VnZwMxMARvcmlnaW4DaGsuZGljdGlvbmFyeS5zZWFyY2gueWFob28uY29tBHBvcwMwBHBxc3RyAwRwcXN0cmwDMARxc3RybAMzBHF1ZXJ5A1lFUwRzZWMDc2VhcmNoBHNsawNidXR0b24EdDIDc2VhcmNoBHQ0A2tleWJvYXJkBHRfc3RtcAMxNzc5NjEyNTY1?p=${selectedText}`;
     chrome.tabs.create({ url: yahooUrl });
   } 
   else if (info.menuItemId === 'yahooPronounce') {

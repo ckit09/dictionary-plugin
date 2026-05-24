@@ -20,9 +20,19 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   const selectedText = info.selectionText.trim();
 
   if (info.menuItemId === 'yahooLookup') {
-    // Open Yahoo Dictionary with the selected word
-    const yahooUrl = `https://hk.dictionary.search.yahoo.com/search;_ylt=Awrx_LmoNdFpJgIAkuLFoolQ;_ylc=X1MDMTM1MTE5NzM4MQRfcgMyBGZyA3NmcARmcjIDc2ItdG9wBGdwcmlkA29hcFUzbFNLUVVtYktBeURVMGYxRkEEbl9yc2x0AzAEbl9zdWdnAzEwBG9yaWdpbgNoay5kaWN0aW9uYXJ5LnNlYXJjaC55YWhvby5jb20EcG9zAzAEcHFzdHIDBHBxc3RybAMwBHFzdHJsAzQEcXVlcnkDd29yZAR0X3N0bXADMTc3NTMxODQ0NQ--?p=${selectedText}`;
-    chrome.tabs.create({ url: yahooUrl });
+    // Store the word and open side panel
+    chrome.storage.local.set({ lastWord: selectedText }, () => {
+      // Open side panel
+      chrome.sidePanel.open({ tabId: tab.id }, () => {
+        // Send message to side panel to display the word
+        chrome.tabs.sendMessage(tab.id, {
+          action: 'showDefinition',
+          word: selectedText
+        }).catch(() => {
+          // Side panel will get the word from storage
+        });
+      });
+    });
   } 
   else if (info.menuItemId === 'yahooPronounce') {
     // Try to find and play pronunciation audio from a dictionary source

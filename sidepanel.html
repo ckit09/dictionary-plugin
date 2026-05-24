@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📖 Dictionary</h1>
+      <button id="closeBtn" class="close-btn">✕</button>
+    </div>
+    
+    <div id="content">
+      <div class="placeholder">
+        <p>Highlight a word and right-click to view its definition here</p>
+      </div>
+    </div>
+    
+    <div id="loading" class="loading" style="display: none;">
+      <p>Loading...</p>
+    </div>
+    
+    <div id="result" class="result" style="display: none;">
+      <div class="word-header">
+        <h2 id="wordTitle"></h2>
+        <button id="pronounceBtn" class="pronounce-btn">🔊 Pronounce</button>
+      </div>
+      <div id="definition" class="definition"></div>
+      <div id="examples" class="examples"></div>
+      <button id="viewFullBtn" class="view-full-btn">📖 View Full Definition</button>
+    </div>
+    
+    <div id="error" class="error" style="display: none;">
+      <p id="errorMessage"></p>
+    </div>
+  </div>
+  
+  <script src="sidepanel.js"></script>
+</body>
+</html>

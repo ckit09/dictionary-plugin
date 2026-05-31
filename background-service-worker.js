@@ -7,12 +7,12 @@ chrome.runtime.onInstalled.addListener(() => {
     contexts: ['selection']
   });
 
-  // Menu item for pronunciation
-  chrome.contextMenus.create({
-    id: 'yahooPronounce',
-    title: 'Pronounce "%s"',
-    contexts: ['selection']
-  });
+  // // Menu item for pronunciation
+  // chrome.contextMenus.create({
+  //   id: 'yahooPronounce',
+  //   title: 'Pronounce "%s"',
+  //   contexts: ['selection']
+  // });
 });
 
 // Handle context menu clicks

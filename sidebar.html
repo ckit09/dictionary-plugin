@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yahoo Dictionary</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="dict-frame" title="Yahoo Dictionary"></iframe>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const word = params.get('p') || '';
+    const yahooUrl = `https://hk.dictionary.search.yahoo.com/search?p=${encodeURIComponent(word)}`;
+    document.getElementById('dict-frame').src = yahooUrl;
+  </script>
+</body>
+</html>

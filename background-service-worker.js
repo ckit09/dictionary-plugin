@@ -1,18 +1,39 @@
+const YAHOO_DICT_HOST = 'hk.dictionary.search.yahoo.com';
+
+function buildYahooDictPath(word) {
+  return `sidebar.html?p=${encodeURIComponent(word)}`;
+}
+
+function setupIframeRules() {
+  chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [1],
+    addRules: [{
+      id: 1,
+      priority: 1,
+      action: {
+        type: 'modifyHeaders',
+        responseHeaders: [
+          { header: 'x-frame-options', operation: 'remove' },
+          { header: 'content-security-policy', operation: 'remove' }
+        ]
+      },
+      condition: {
+        urlFilter: `||${YAHOO_DICT_HOST}`,
+        resourceTypes: ['sub_frame']
+      }
+    }]
+  });
+}
+
 // Create context menu items on extension installation
 chrome.runtime.onInstalled.addListener(() => {
-  // Menu item for dictionary lookup
+  setupIframeRules();
+
   chrome.contextMenus.create({
     id: 'yahooLookup',
     title: 'Look up "%s" in Yahoo Dictionary',
     contexts: ['selection']
   });
-
-  // Menu item for pronunciation
-  // chrome.contextMenus.create({
-  //   id: 'yahooPronounce',
-  //   title: 'Pronounce "%s"',
-  //   contexts: ['selection']
-  // });
 });
 
 // Handle context menu clicks
@@ -20,15 +41,30 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   const selectedText = info.selectionText.trim();
 
   if (info.menuItemId === 'yahooLookup') {
-    // Open Yahoo Dictionary with the selected word
-    const yahooUrl = `https://hk.dictionary.search.yahoo.com/search;_ylt=Awr1TUaTuxJqVwIA4qvDoolQ;_ylc=X1MDMTM1MTE5NzM3OQRfcgMyBGFjdG4Da2V5Ym9hcmQEZnIyA3A6cyx2OnNmcCxtOnNiLXRvcARncHJpZANoNHduN0R4eFQ2ZUhaQk9zNVdHR1RBBG5fcnNsdAMwBG5fc3VnZwMxMARvcmlnaW4DaGsuZGljdGlvbmFyeS5zZWFyY2gueWFob28uY29tBHBvcwMwBHBxc3RyAwRwcXN0cmwDMARxc3RybAMzBHF1ZXJ5A1lFUwRzZWMDc2VhcmNoBHNsawNidXR0b24EdDIDc2VhcmNoBHQ0A2tleWJvYXJkBHRfc3RtcAMxNzc5NjEyNTY1?p=${selectedText}`;
-    chrome.tabs.create({ url: yahooUrl });
+    openYahooDictionaryInSidebar(selectedText, tab);
   } 
   else if (info.menuItemId === 'yahooPronounce') {
     // Try to find and play pronunciation audio from a dictionary source
     handlePronunciation(selectedText, tab);
   }
 });
+
+async function openYahooDictionaryInSidebar(word, tab) {
+  if (!tab?.id) {
+    return;
+  }
+
+  try {
+    await chrome.sidePanel.setOptions({
+      tabId: tab.id,
+      path: buildYahooDictPath(word),
+      enabled: true
+    });
+    await chrome.sidePanel.open({ tabId: tab.id });
+  } catch (error) {
+    console.error('Failed to open Yahoo Dictionary sidebar:', error);
+  }
+}
 
 // Handle pronunciation - using Web Speech API
 async function handlePronunciation(word, tab) {
